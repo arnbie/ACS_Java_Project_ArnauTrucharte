@@ -1,0 +1,109 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+
+class Webserver {
+- {static} PORT :int
+- {static} FORMATTER : DateTimeFormatter
++ Webserver()
+}
+
+class SocketThread {
+- insocked : Socked
+- makeRequest(tokens : String[]) : Request
+- makeRequestReader(tokens : String[]) : RequestReader
+- makeRequestArea(tokens : String[]) : RequestArea
+- makeHeaderAnswer() : String
+- makeJsonAnswer(request : Request) : String
++ run()
+}
+
+Webserver +-right- SocketThread
+
+note right of SocketThread
+inner class
+of Webserver
+end note
+
+class DirectoryDoors {
+- {static} allDoors : Door[]
++ {static} makeDoors()
++ {static} findDoorById(id : String) : Door
++ {static} getAllDoors() : Door[]
+}
+
+DirectoryDoors --> "*" Door : "allDoors"
+
+class DirectoryUsers {
+- {static} users : User[]
++ {static} makeUsers()
++ {static} findUserByCredential(credential : String) : User
+}
+
+DirectoryUsers --> "*" User : "users"
+
+class Door {
+- id : String
+- doorState : DoorState
+- from : Space
+- to : Space
++ Door(\nid : String, \niFrom : Space, \niTo : Space)
++ processRequest(
+request : RequestReader)
++ setDoorState(
+input_door_state : DoorState)
++ isClosed()
++ getId()
++ getSpaces()
++ getLocked()
++ toJson() : JSONObject
+'+ toString() : String
+'+ isClosed() :boolean
+'+ setClosed(b : boolean)
+'+ getStateName() : String
+- doAction(action : String)
+}
+
+
+class User {
+- name : String
+- credential : String
+- group : UserGroup
++ User(\nname: String, \ncredential: String, \nuGroup : UserGroup)
++ getCredential()
++ getGroup()
++ toString() : String
+}
+
+class DirectoryUserGroups {
+- groups : ArrayList<UserGroup>
++ makeUserGroups()
++ findUserGroupByName(String name)
+}
+
+class UserGroup {
+- name : String
+- actions : ArrayList<String>
+- users : ArrayList<User>
+- validSpaces : ArrayList<Space>
+- schedule : Schedule
++ UserGroup(\nname : String, \nactions2 : ArrayList<String>, \nspaces : ArrayList<Space>, \nschedule : Schedule)
+}
+
+
+class Main {
++ {static} main(args : String)
+}
+
+note right of Main::main
+DirectoryDoors.makeDoors()
+DiretoryUsers.makeUsers()
+new Webserver()
+end note
+
+Main -[hidden]down- Webserver
+DirectoryUserGroups o-> "0..*" UserGroup
+UserGroup <-left> "1..x" User
+Webserver -[hidden]down- DirectoryDoors
+DirectoryDoors -[hidden]right- DirectoryUsers
+@enduml

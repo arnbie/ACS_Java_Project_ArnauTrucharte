@@ -1,0 +1,39 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+
+abstract DoorState {
+- door : Door
++ DoorState(door : Door)
++ getDoor()
++ open()
++ close()
++ unlock()
++ lock()
++ toString()
++ isClosed()
+}
+class Locked {
++ Locked(door : Door)
++ getDoor()
++ open()
++ close()
++ unlock()
++ lock()
++ toString()
++ isClosed()
+}
+class Unlocked {
+- open : boolean
++ Locked(door : Door)
++ getDoor()
++ open()
++ close()
++ unlock()
++ lock()
++ toString()
++ isClosed()
+}
+Unlocked --|> DoorState
+Locked --|> DoorState
+@enduml

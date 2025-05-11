@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+
+abstract Area {
+- Id : String
++ Area(id : String, partOf : Partition)
++ findAreaById(Id : String)
++ getDoorsGivingAcces()
+}
+
+class Partition {
+- associated_areas : ArrayList<Area>
++ Partition(name : String, partOf : Partition)
++ findAreaById(Id : String)
++ getDoorsGivingAcces()
++ addArea(area : Area)
+}
+
+class Space {
+- associated_doors : ArrayList<Door>
++ Space(name : String, partOf : Partition)
++ findAreaById(Id : String)
++ getDoorsGivingAcces()
++ addDoor(input_door : Door)
+}
+
+Partition --|> Area
+Space --|> Area
+Partition o---> Area : 1..x
+@enduml
